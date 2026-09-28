@@ -3,7 +3,9 @@
 // Nenhum componente deve ter strings de marca hardcoded.
 
 export const brand = {
-  name:        'LUCCA',
+  name:        'Sampa by Lucca',
+  shortName:   'SampaByLucca',
+  avatarName:  'Lucca',             // nome do avatar — pode mudar independente do app
   tagline:     'Seu guia do metrô de São Paulo',
   logoSvg:     '/brand/logo.svg',
   logomark:    '/brand/logomark.svg',
