@@ -1,0 +1,16 @@
+{
+  "name": "lucca-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev":   "esbuild src/main.js --bundle --outfile=dist/app.js --sourcemap --watch",
+    "build": "esbuild src/main.js --bundle --minify --outfile=dist/app.js",
+    "build:admin": "esbuild admin/main.js --bundle --minify --outfile=dist/admin/app.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.43.0"
+  }
+}

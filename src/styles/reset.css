@@ -1,0 +1,41 @@
+/* Reset base — não usar cores diretas aqui, apenas tokens */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 15px;
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--tx);
+  font-family: var(--ff-body);
+  line-height: 1.6;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, video, canvas { max-width: 100%; display: block; }
+
+a { color: var(--ac2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button { cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--ac2);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

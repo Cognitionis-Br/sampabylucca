@@ -1,0 +1,127 @@
+/* ──────────────────────────────────────────────────────
+   LUCCA Design Tokens
+   Fonte única de todas as cores, tipografia e espaçamento.
+   Adaptado do POC 0.1 (sampa-metro/index.html).
+────────────────────────────────────────────────────── */
+
+:root {
+  /* Superfícies */
+  --bg:      #0a0d14;
+  --s1:      #131720;
+  --s2:      #1a2030;
+  --s3:      #222a3a;
+  --bd:      #232b3d;
+  --bd2:     #2e3a50;
+
+  /* Texto */
+  --tx:      #e8ecf5;
+  --tx2:     #a0aabd;
+  --mt:      #6b7894;
+  --dim:     #3a4258;
+
+  /* Marca */
+  --ac:      #00639a;
+  --ac2:     #0088cc;
+  --ac-glow: rgba(0, 140, 255, 0.35);
+
+  /* Semânticas */
+  --ok:      #3fb950;
+  --warn:    #d29922;
+  --err:     #f85149;
+  --info:    #58a6ff;
+
+  /* Linhas do metrô SP */
+  --l1-c:   #1566b0;   /* Azul */
+  --l1-t:   #ffffff;
+  --l2-c:   #007a3d;   /* Verde */
+  --l2-t:   #ffffff;
+  --l3-c:   #cc2926;   /* Vermelha */
+  --l3-t:   #ffffff;
+  --l4-c:   #ffd500;   /* Amarela */
+  --l4-t:   #000000;
+  --l5-c:   #9b2d82;   /* Lilás */
+  --l5-t:   #ffffff;
+  --l7-c:   #c8102e;   /* Rubi */
+  --l7-t:   #ffffff;
+  --l8-c:   #686868;   /* Diamante */
+  --l8-t:   #ffffff;
+  --l9-c:   #01a651;   /* Esmeralda */
+  --l9-t:   #ffffff;
+  --l10-c:  #009aba;   /* Turquesa */
+  --l10-t:  #ffffff;
+  --l11-c:  #f77f00;   /* Coral */
+  --l11-t:  #ffffff;
+  --l12-c:  #003087;   /* Safira */
+  --l12-t:  #ffffff;
+  --l13-c:  #00a78e;   /* Jade */
+  --l13-t:  #ffffff;
+  --l15-c:  #9d9d9c;   /* Prata */
+  --l15-t:  #ffffff;
+
+  /* Tipografia */
+  --ff-head: 'Inter', system-ui, sans-serif;
+  --ff-body: 'Inter', system-ui, sans-serif;
+  --ff-mono: 'Fira Code', 'Consolas', monospace;
+
+  /* Escala de tipo */
+  --t-xs:   0.72rem;
+  --t-sm:   0.82rem;
+  --t-base: 0.9rem;
+  --t-md:   1rem;
+  --t-lg:   1.15rem;
+  --t-xl:   1.35rem;
+  --t-2xl:  1.6rem;
+
+  /* Espaçamento */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  24px;
+  --sp-6:  32px;
+
+  /* Bordas */
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  14px;
+  --r-xl:  20px;
+  --r-full: 999px;
+
+  color-scheme: dark;
+}
+
+/* Light mode — tema secundário (configurável em APP-20) */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:   #f0f4f8;
+    --s1:   #ffffff;
+    --s2:   #eef2f6;
+    --s3:   #e4eaf2;
+    --bd:   #d0d7de;
+    --bd2:  #bbc5d0;
+    --tx:   #1c2128;
+    --tx2:  #57606a;
+    --mt:   #8b949e;
+    --dim:  #b0bac7;
+    --ac:   #0969da;
+    --ac2:  #0080c6;
+    --ac-glow: rgba(9, 105, 218, 0.2);
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg:   #f0f4f8;
+  --s1:   #ffffff;
+  --s2:   #eef2f6;
+  --s3:   #e4eaf2;
+  --bd:   #d0d7de;
+  --bd2:  #bbc5d0;
+  --tx:   #1c2128;
+  --tx2:  #57606a;
+  --mt:   #8b949e;
+  --dim:  #b0bac7;
+  --ac:   #0969da;
+  --ac2:  #0080c6;
+  --ac-glow: rgba(9, 105, 218, 0.2);
+  color-scheme: light;
+}
