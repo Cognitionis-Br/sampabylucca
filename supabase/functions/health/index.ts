@@ -1,30 +1,29 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import postgres from 'https://deno.land/x/postgresjs@v3.4.4/mod.js'
 
 serve(async () => {
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-  )
+  const sql = postgres(Deno.env.get('SUPABASE_DB_URL') ?? '', { max: 1 })
 
-  const { count: stations } = await supabase
-    .from('metro.stations')
-    .select('*', { count: 'exact', head: true })
+  try {
+    const [{ stations }] = await sql`SELECT COUNT(*)::int AS stations FROM metro.stations`
+    const [{ lines }]    = await sql`SELECT COUNT(*)::int AS lines    FROM metro.lines`
 
-  const { count: lines } = await supabase
-    .from('metro.lines')
-    .select('*', { count: 'exact', head: true })
+    await sql.end()
 
-  return new Response(
-    JSON.stringify({
-      status:    'ok',
-      version:   '0.1.0-r0',
-      timestamp: new Date().toISOString(),
-      db: {
-        stations: stations ?? 0,
-        lines:    lines    ?? 0,
-      },
-    }),
-    { headers: { 'Content-Type': 'application/json' } }
-  )
+    return new Response(
+      JSON.stringify({
+        status:    'ok',
+        version:   '0.1.0-r0',
+        timestamp: new Date().toISOString(),
+        db: { stations, lines },
+      }),
+      { headers: { 'Content-Type': 'application/json' } }
+    )
+  } catch (err) {
+    await sql.end()
+    return new Response(
+      JSON.stringify({ status: 'error', message: String(err) }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    )
+  }
 })
