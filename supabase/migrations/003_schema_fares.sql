@@ -21,4 +21,4 @@ CREATE TABLE fares.tariff_rules (
   integration_with TEXT[],              -- linhas que integram sem cobrar extra
   created_at    TIMESTAMPTZ DEFAULT now()
 );
-CREATE INDEX idx_tariff_active ON fares.tariff_rules(valid_from, valid_until) WHERE valid_until IS NULL OR valid_until >= CURRENT_DATE;
+CREATE INDEX idx_tariff_active ON fares.tariff_rules(valid_from, valid_until) WHERE valid_until IS NULL;

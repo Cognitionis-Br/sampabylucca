@@ -79,7 +79,7 @@ CREATE TABLE metro.disruptions (
   created_by  UUID,
   created_at  TIMESTAMPTZ DEFAULT now()
 );
-CREATE INDEX idx_disruptions_active ON metro.disruptions(ends_at) WHERE ends_at IS NULL OR ends_at > now();
+CREATE INDEX idx_disruptions_active ON metro.disruptions(ends_at) WHERE ends_at IS NULL;
 
 -- Habilitar Realtime para disruptions
 ALTER TABLE metro.disruptions REPLICA IDENTITY FULL;
