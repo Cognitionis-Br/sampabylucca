@@ -47,6 +47,12 @@ router.on('/nearby',       ()      => mount(renderNearby))
 router.on('/login',        ()      => mount(renderLogin))
 router.on('/route-detail', (state) => mount(renderRouteDetail, state))
 
+// ── Catch-all ────────────────────────────────────────────────────────────────
+router.on('*', () => mount(renderHome))
+
+// ── Expõe navigate globalmente para onclick inline ────────────────────────────
+window.navigate = router.navigate.bind(router)
+
 // ── Start ────────────────────────────────────────────────────────────────────
 router.start()
 

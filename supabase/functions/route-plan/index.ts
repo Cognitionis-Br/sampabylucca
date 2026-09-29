@@ -21,11 +21,11 @@ serve(async (req) => {
 
     // Load stations + lines + transfers
     const stations  = await sql`SELECT id, name FROM metro.stations`
-    const lineLinks = await sql`SELECT station_id, line_id FROM metro.station_lines`
+    const lineLinks = await sql`SELECT station_id, line_id, position FROM metro.station_lines ORDER BY line_id, position`
     const transfers = await sql`
-      SELECT from_station_id, to_station_id, walk_seconds
+      SELECT station_from, station_to, walk_time_s
       FROM metro.transfers`
-    const lines = await sql`SELECT id, name, color FROM metro.lines`
+    const lines = await sql`SELECT id, name, color_hex FROM metro.lines`
 
     await sql.end()
 
@@ -36,7 +36,7 @@ serve(async (req) => {
     const lineName:  Record<string, string> = {}
 
     for (const l of lines) {
-      lineColor[l.id] = l.color ?? '#888'
+      lineColor[l.id] = l.color_hex ?? '#888'
       lineName[l.id]  = l.name
     }
     for (const lk of lineLinks) {
@@ -44,7 +44,7 @@ serve(async (req) => {
       stationLine[lk.station_id].push(lk.line_id)
     }
 
-    // Within each line, connect adjacent stations sequentially
+    // Within each line, connect adjacent stations in position order
     const byLine: Record<string, string[]> = {}
     for (const lk of lineLinks) {
       byLine[lk.line_id] = byLine[lk.line_id] ?? []
@@ -60,10 +60,10 @@ serve(async (req) => {
     }
     // Add transfer edges
     for (const t of transfers) {
-      const a = t.from_station_id, b = t.to_station_id
+      const a = t.station_from, b = t.station_to
       adj[a] = adj[a] ?? []; adj[b] = adj[b] ?? []
-      adj[a].push({ to: b, walkSecs: t.walk_seconds })
-      adj[b].push({ to: a, walkSecs: t.walk_seconds })
+      adj[a].push({ to: b, walkSecs: t.walk_time_s })
+      adj[b].push({ to: a, walkSecs: t.walk_time_s })
     }
 
     // Dijkstra
@@ -113,10 +113,10 @@ serve(async (req) => {
       const lid = path[i + 1].lineId
       if (!lid) {
         const walkSecs = transfers.find(
-          (t: {from_station_id: string; to_station_id: string}) =>
-            (t.from_station_id === path[i].stationId && t.to_station_id === path[i+1].stationId) ||
-            (t.to_station_id === path[i].stationId && t.from_station_id === path[i+1].stationId)
-        )?.walk_seconds ?? 180
+          (t: {station_from: string; station_to: string}) =>
+            (t.station_from === path[i].stationId && t.station_to === path[i+1].stationId) ||
+            (t.station_to === path[i].stationId && t.station_from === path[i+1].stationId)
+        )?.walk_time_s ?? 180
         steps.push({ type: 'transfer', walkSeconds: walkSecs })
         i++
         continue

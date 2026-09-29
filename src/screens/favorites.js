@@ -72,12 +72,14 @@ function renderEmpty() {
       <span class="fav-empty-icon">❤️</span>
       <p>Você ainda não tem favoritos.</p>
       <p class="fav-empty-hint">Ao calcular uma rota, toque em ♡ para salvar aqui.</p>
-      <button class="btn-primary fav-cta" onclick="navigate('/route')">Buscar rota</button>
+      <button class="btn-primary fav-cta" id="fav-cta">Buscar rota</button>
     </div>
   `
 }
 
 function bindActions(el) {
+  el.querySelector('#fav-cta')?.addEventListener('click', () => navigate('/route'))
+
   el.querySelectorAll('.fav-play').forEach(btn => {
     btn.addEventListener('click', () => {
       navigate('/route', { origin: btn.dataset.origin, destination: btn.dataset.dest })

@@ -150,8 +150,29 @@ export async function renderHome(el) {
     btn.addEventListener('click', () => navigate(btn.dataset.route))
   })
 
-  // Carrega disruptions
+  // Carrega disruptions e abre canal realtime
   loadDisruptions(el)
+  subscribeDisruptions(el)
+}
+
+function subscribeDisruptions(el) {
+  const channel = supabase
+    .channel('home-disruptions')
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'metro',
+      table: 'disruptions',
+    }, () => loadDisruptions(el))
+    .subscribe()
+
+  // Cleanup when element is removed
+  const obs = new MutationObserver(() => {
+    if (!document.body.contains(el)) {
+      supabase.removeChannel(channel)
+      obs.disconnect()
+    }
+  })
+  obs.observe(document.body, { childList: true, subtree: true })
 }
 
 async function loadDisruptions(el) {
@@ -173,7 +194,7 @@ async function loadDisruptions(el) {
           <span class="route-label">Para o Trabalho</span>
           <span class="route-sub">38 min · Linha 4 + Linha 9</span>
         </div>
-        <button class="route-play" onclick="navigate('/route')">▶</button>
+        <button class="route-play btn-go-route">▶</button>
       </div>
       <div class="home-route-item">
         <div class="home-route-icon" style="background:#dbeafe">🏠</div>
@@ -181,15 +202,17 @@ async function loadDisruptions(el) {
           <span class="route-label">Para Casa</span>
           <span class="route-sub">42 min · Linha 2 + Ônibus</span>
         </div>
-        <button class="route-play" onclick="navigate('/route')">▶</button>
+        <button class="route-play btn-go-route">▶</button>
       </div>
       ${data?.length ? `
       <div class="home-alert">
         <span class="alert-dot"></span>
         <span>${data[0].title}</span>
-        <button onclick="navigate('/disruptions')">Ver &rsaquo;</button>
+        <button class="btn-go-disruptions">Ver &rsaquo;</button>
       </div>` : ''}
     `
+    list.querySelectorAll('.btn-go-route').forEach(b => b.addEventListener('click', () => navigate('/route')))
+    list.querySelector('.btn-go-disruptions')?.addEventListener('click', () => navigate('/disruptions'))
   } catch {
     // silencia erros de rede
   }
