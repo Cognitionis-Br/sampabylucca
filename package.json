@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev":   "esbuild src/main.js --bundle --outfile=dist/app.js --sourcemap --watch",
-    "build": "node -e \"require('fs').mkdirSync('dist/styles',{recursive:true})\" && esbuild src/main.js --bundle --minify --outfile=dist/app.js && cp -r public/* dist/ && cp src/styles/*.css dist/styles/",
+    "dev": "node build.mjs",
+    "build": "cross-env NODE_ENV=production node build.mjs",
     "build:admin": "esbuild admin/main.js --bundle --minify --outfile=dist/admin/app.js"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "esbuild": "^0.21.0"
   },
   "dependencies": {

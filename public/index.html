@@ -3,36 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Sampa by Lucca</title>
+  <meta name="theme-color" content="#0f2d52">
+  <meta name="description" content="Mobilidade inteligente no metrô de São Paulo">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LUCCA">
+  <title>LUCCA</title>
+  <link rel="manifest" href="/manifest.json">
   <link rel="stylesheet" href="/styles/tokens.css">
   <link rel="stylesheet" href="/styles/reset.css">
   <style>
-    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-    .placeholder {
-      text-align: center;
-      color: var(--mt);
-      font-size: 0.9rem;
-    }
-    .placeholder-logo {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--ac2);
-      margin-bottom: 8px;
-      letter-spacing: -1px;
-    }
-    .placeholder-sub {
-      font-size: 0.8rem;
-      color: var(--dim);
-      margin-top: 4px;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif; background: #fff; }
+    #app { height: 100%; }
   </style>
 </head>
 <body>
-  <div class="placeholder">
-    <div class="placeholder-logo">Sampa by Lucca</div>
-    <div>Assistente do Metrô de São Paulo</div>
-    <div class="placeholder-sub">R0 Foundation — em construção</div>
-  </div>
+  <div id="app"></div>
   <script type="module" src="/app.js"></script>
 </body>
 </html>
