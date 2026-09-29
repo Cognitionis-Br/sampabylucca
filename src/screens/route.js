@@ -1,5 +1,6 @@
-import { navigate } from '../modules/router.js'
-import { supabase } from '../modules/supabase.js'
+import { navigate }                     from '../modules/router.js'
+import { supabase }                     from '../modules/supabase.js'
+import { addFavorite, isFavorite }      from '../modules/favorites.js'
 
 let origin = ''
 let destination = ''
@@ -174,13 +175,33 @@ function renderResults(el, routes) {
       <div class="route-steps">
         ${r.steps.map(s => renderStep(s)).join('')}
       </div>
-      ${i === 0 ? `<button class="btn-primary route-start" onclick="navigate('/route-detail')">Iniciar no app</button>` : ''}
+      <div class="route-card-actions">
+        ${i === 0 ? `<button class="btn-primary route-start">Iniciar</button>` : ''}
+        <button class="route-fav ${isFavorite(origin, destination) ? 'saved' : ''}"
+          data-origin="${origin}" data-dest="${destination}"
+          title="${isFavorite(origin, destination) ? 'Remover dos favoritos' : 'Salvar nos favoritos'}">
+          ${isFavorite(origin, destination) ? '♥' : '♡'}
+        </button>
+      </div>
     </div>
   `).join('')
 
   el.querySelectorAll('.route-start').forEach(btn =>
     btn.addEventListener('click', () => navigate('/route-detail'))
   )
+
+  el.querySelectorAll('.route-fav').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const added = addFavorite({
+        origin:      btn.dataset.origin,
+        destination: btn.dataset.dest,
+        label:       `${btn.dataset.origin} → ${btn.dataset.dest}`,
+        icon:        '⭐',
+      })
+      btn.textContent = added ? '♥' : '♡'
+      btn.classList.toggle('saved', added)
+    })
+  })
 }
 
 function renderStep(s) {
@@ -285,5 +306,13 @@ export const routeCSS = `
 .step-line { font-weight: 700; font-size: .85rem; }
 .step-detail { color: #64748b; font-size: .8rem; }
 
-.route-start { margin-top: 4px; }
+.route-card-actions { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.route-start { flex: 1; }
+.route-fav {
+  background: none; border: 1.5px solid #e2e8f0; border-radius: 10px;
+  width: 42px; height: 42px; font-size: 1.2rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #94a3b8; transition: all .15s; flex-shrink: 0;
+}
+.route-fav.saved { color: #ef4444; border-color: #fecaca; background: #fff5f5; }
 `
