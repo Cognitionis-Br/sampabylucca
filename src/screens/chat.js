@@ -108,20 +108,45 @@ function addTyping(container) {
 async function processMessage(container, text) {
   const typing = addTyping(container)
   const intent = parseIntent(text)
-  await new Promise(r => setTimeout(r, 600))
-  typing.remove()
 
-  const reply = await buildReply(intent)
+  const reply = await buildReply(intent, text)
+  typing.remove()
   addBubble(container, reply, 'lucca')
   tts.speak(reply)
 }
 
-async function buildReply(intent) {
+const chatHistory = []
+
+async function buildReply(intent, rawText) {
+  // Tenta Haiku primeiro
+  try {
+    const res = await fetch(`${__SUPABASE_URL__}/functions/v1/lucca-chat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${__SUPABASE_ANON_KEY__}`,
+      },
+      body: JSON.stringify({
+        message: rawText,
+        history: chatHistory.slice(-10),
+      }),
+    })
+    if (res.ok) {
+      const { reply } = await res.json()
+      if (reply) {
+        chatHistory.push({ role: 'user', content: rawText })
+        chatHistory.push({ role: 'assistant', content: reply })
+        return reply
+      }
+    }
+  } catch { /* fallback abaixo */ }
+
+  // Fallback determinístico
   switch (intent.intent) {
     case 'ROUTE':
-      return `Ótimo! Para planejar a rota de ${intent.origin ?? 'sua origem'} para ${intent.destination ?? 'seu destino'}, use a tela de rotas. Vou te levar lá!`
+      return `Para planejar a rota de ${intent.origin ?? 'sua origem'} para ${intent.destination ?? 'seu destino'}, use a tela de rotas.`
     case 'FARE':
-      return 'A tarifa do metrô e CPTM em São Paulo é R$ 5,00 (bilhete único). Com integração com ônibus, você paga a mesma tarifa em até 3 horas.'
+      return 'A tarifa do metrô e CPTM em São Paulo é R$ 5,00 (bilhete único). Integração com ônibus no mesmo ticket por até 3 horas.'
     case 'DISRUPTION': {
       try {
         const { data } = await supabase
@@ -133,14 +158,12 @@ async function buildReply(intent) {
           return `Há ${data.length} ocorrência(s) ativa(s): ${data.map(d => d.title).join('; ')}.`
         }
       } catch { /* ignore */ }
-      return 'Não há ocorrências ativas no momento. As linhas estão operando normalmente.'
+      return 'Não há ocorrências ativas no momento. Todas as linhas operando normalmente.'
     }
     case 'GREET':
-      return 'Olá! Como posso ajudar? Você pode me perguntar sobre rotas, tarifas, ou o que está acontecendo no metrô agora.'
-    case 'LINE_STATUS':
-      return `Buscando informações sobre ${intent.line ? `a Linha ${intent.line}` : 'as linhas'}... Consulte a seção Ao Vivo para atualizações em tempo real.`
+      return 'Olá! Posso ajudar com rotas, tarifas ou o que está acontecendo no metrô agora.'
     default:
-      return 'Posso ajudar com rotas, tarifas e informações sobre o transporte público de São Paulo. O que você precisa?'
+      return 'Posso ajudar com rotas, tarifas e informações sobre o transporte público de São Paulo.'
   }
 }
 
