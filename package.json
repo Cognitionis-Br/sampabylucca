@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev":   "esbuild src/main.js --bundle --outfile=dist/app.js --sourcemap --watch",
-    "build": "esbuild src/main.js --bundle --minify --outfile=dist/app.js",
+    "build": "node -e \"require('fs').mkdirSync('dist/styles',{recursive:true})\" && esbuild src/main.js --bundle --minify --outfile=dist/app.js && cp -r public/* dist/ && cp src/styles/*.css dist/styles/",
     "build:admin": "esbuild admin/main.js --bundle --minify --outfile=dist/admin/app.js"
   },
   "devDependencies": {
