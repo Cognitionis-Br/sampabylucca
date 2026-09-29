@@ -159,7 +159,10 @@ async function stationIdByName(name) {
   return data?.[0]?.id ?? null
 }
 
+let _lastRoutes = []
+
 function renderResults(el, routes) {
+  _lastRoutes = routes
   el.innerHTML = routes.map((r, i) => `
     <div class="route-card${i === 0 ? ' best' : ''}">
       ${i === 0 ? '<span class="best-badge">Melhor opção</span>' : ''}
@@ -186,9 +189,11 @@ function renderResults(el, routes) {
     </div>
   `).join('')
 
-  el.querySelectorAll('.route-start').forEach(btn =>
-    btn.addEventListener('click', () => navigate('/route-detail'))
-  )
+  el.querySelectorAll('.route-start').forEach((btn, i) => {
+    btn.addEventListener('click', () => navigate('/route-detail', {
+      route: { ..._lastRoutes[i] ?? _lastRoutes[0], origin, destination },
+    }))
+  })
 
   el.querySelectorAll('.route-fav').forEach(btn => {
     btn.addEventListener('click', () => {

@@ -1,13 +1,23 @@
-import { navigate } from '../modules/router.js'
-import { supabase } from '../modules/supabase.js'
+import { navigate }      from '../modules/router.js'
+import { supabase }      from '../modules/supabase.js'
+import { getFavorites }  from '../modules/favorites.js'
 
-const QUICK = [
-  { id: 'work',  icon: '🏢', label: 'Trabalho' },
-  { id: 'home',  icon: '🏠', label: 'Casa' },
-  { id: 'near',  icon: '📍', label: 'Perto de mim' },
-]
+function buildChips() {
+  const favs = getFavorites().slice(0, 2)
+  const chips = []
+
+  if (favs.length >= 1) chips.push({ id: 'fav0', icon: '⭐', label: favs[0].label ?? favs[0].destination, data: favs[0] })
+  else                  chips.push({ id: 'work', icon: '🏢', label: 'Trabalho', data: null })
+
+  if (favs.length >= 2) chips.push({ id: 'fav1', icon: '⭐', label: favs[1].label ?? favs[1].destination, data: favs[1] })
+  else                  chips.push({ id: 'home2', icon: '🏠', label: 'Casa', data: null })
+
+  chips.push({ id: 'near', icon: '📍', label: 'Perto de mim', data: null })
+  return chips
+}
 
 export async function renderHome(el) {
+  const chips = buildChips()
   el.innerHTML = `
     <div class="home">
       <!-- Header -->
@@ -41,7 +51,7 @@ export async function renderHome(el) {
 
         <!-- Chips rápidos -->
         <div class="home-chips">
-          ${QUICK.map(q => `
+          ${chips.map(q => `
             <button class="home-chip" data-id="${q.id}">
               ${q.icon} ${q.label}
             </button>
@@ -125,6 +135,17 @@ export async function renderHome(el) {
   el.querySelector('#btn-search')?.addEventListener('click', () => navigate('/route'))
   el.querySelector('#btn-avatar')?.addEventListener('click', () => navigate('/chat'))
   el.querySelector('#home-map')?.addEventListener('click',   () => navigate('/map'))
+
+  // Chips dinâmicos
+  el.querySelectorAll('.home-chip').forEach(btn => {
+    const id   = btn.dataset.id
+    const chip = chips.find(c => c.id === id)
+    btn.addEventListener('click', () => {
+      if (id === 'near') { navigate('/nearby'); return }
+      if (chip?.data)    { navigate('/route', { origin: chip.data.origin, destination: chip.data.destination }); return }
+      navigate('/route')
+    })
+  })
   el.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => navigate(btn.dataset.route))
   })

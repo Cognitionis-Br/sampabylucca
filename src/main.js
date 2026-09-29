@@ -10,13 +10,14 @@ import { renderLogin,       loginCSS }       from './screens/login.js'
 import { renderRouteDetail, routeDetailCSS } from './screens/route-detail.js'
 import { renderFavorites,   favoritesCSS }   from './screens/favorites.js'
 import { renderMore,        moreCSS }        from './screens/more.js'
+import { renderNearby,      nearbyCSS }      from './screens/nearby.js'
 import { brand }                             from './brand.js'
 
 // ── Inject styles ───────────────────────────────────────────────────────────
 const style = document.createElement('style')
 style.textContent = [
   splashCSS, onboardingCSS, loginCSS, homeCSS, routeCSS, chatCSS,
-  disruptionsCSS, mapCSS, routeDetailCSS, favoritesCSS, moreCSS,
+  disruptionsCSS, mapCSS, routeDetailCSS, favoritesCSS, moreCSS, nearbyCSS,
 ].join('\n')
 document.head.appendChild(style)
 
@@ -42,7 +43,7 @@ router.on('/disruptions',  ()      => mount(renderDisruptions))
 router.on('/favorites', ()      => mount(renderFavorites))
 router.on('/more',      ()      => mount(renderMore))
 router.on('/map',          ()      => mount(renderMap))
-router.on('/nearby',       ()      => mount(renderDisruptions))
+router.on('/nearby',       ()      => mount(renderNearby))
 router.on('/login',        ()      => mount(renderLogin))
 router.on('/route-detail', (state) => mount(renderRouteDetail, state))
 
