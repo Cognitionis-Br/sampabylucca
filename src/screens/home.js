@@ -49,8 +49,8 @@ export async function renderHome(el) {
         </div>
       </div>
 
-      <!-- Mapa placeholder -->
-      <div class="home-map" id="home-map">
+      <!-- Mapa placeholder (clica para abrir mapa completo) -->
+      <div class="home-map" id="home-map" style="cursor:pointer" title="Ver mapa completo">
         <div class="home-map-placeholder">
           <svg width="100%" height="100%" viewBox="0 0 375 300" fill="none">
             <!-- Grid de ruas simulado -->
@@ -124,6 +124,7 @@ export async function renderHome(el) {
   // Ações
   el.querySelector('#btn-search')?.addEventListener('click', () => navigate('/route'))
   el.querySelector('#btn-avatar')?.addEventListener('click', () => navigate('/chat'))
+  el.querySelector('#home-map')?.addEventListener('click',   () => navigate('/map'))
   el.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => navigate(btn.dataset.route))
   })
@@ -135,8 +136,7 @@ export async function renderHome(el) {
 async function loadDisruptions(el) {
   try {
     const { data } = await supabase
-      .schema('metro')
-      .from('disruptions')
+      .from('metro_disruptions')
       .select('title, severity, line_id')
       .is('ends_at', null)
       .limit(3)

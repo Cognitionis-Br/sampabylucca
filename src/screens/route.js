@@ -70,8 +70,7 @@ function setupInputs(el) {
     if (q.length < 2) { ac.hidden = true; return }
 
     const { data } = await supabase
-      .schema('metro')
-      .from('stations')
+      .from('metro_stations')
       .select('id, name')
       .ilike('name', `%${q}%`)
       .limit(8)
@@ -152,8 +151,7 @@ async function searchRoute(el) {
 
 async function stationIdByName(name) {
   const { data } = await supabase
-    .schema('metro')
-    .from('stations')
+    .from('metro_stations')
     .select('id')
     .ilike('name', name)
     .limit(1)

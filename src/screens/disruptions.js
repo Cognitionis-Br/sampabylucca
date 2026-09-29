@@ -61,9 +61,8 @@ export async function renderDisruptions(el) {
     list.innerHTML = '<div class="dis-loading">Carregando...</div>'
     try {
       let q = supabase
-        .schema('metro')
-        .from('disruptions')
-        .select('id, title, description, severity, line_id, starts_at, ends_at')
+        .from('metro_disruptions')
+        .select('id, title, message, severity, line_id, starts_at, ends_at')
         .is('ends_at', null)
         .order('starts_at', { ascending: false })
         .limit(30)
@@ -116,7 +115,7 @@ function renderList(el, items) {
           <span class="dis-when">${when}</span>
         </div>
         <h4 class="dis-title">${d.title}</h4>
-        ${d.description ? `<p class="dis-desc">${d.description}</p>` : ''}
+        ${d.message ? `<p class="dis-desc">${d.message}</p>` : ''}
         ${d.line_id ? `<span class="dis-line">Linha ${d.line_id}</span>` : ''}
       </div>`
   }).join('')

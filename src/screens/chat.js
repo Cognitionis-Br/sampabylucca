@@ -125,8 +125,7 @@ async function buildReply(intent) {
     case 'DISRUPTION': {
       try {
         const { data } = await supabase
-          .schema('metro')
-          .from('disruptions')
+          .from('metro_disruptions')
           .select('title, severity')
           .is('ends_at', null)
           .limit(3)

@@ -5,12 +5,13 @@ import { renderHome,        homeCSS }        from './screens/home.js'
 import { renderRoute,       routeCSS }       from './screens/route.js'
 import { renderChat,        chatCSS }        from './screens/chat.js'
 import { renderDisruptions, disruptionsCSS } from './screens/disruptions.js'
+import { renderMap,         mapCSS }         from './screens/map.js'
 import { brand }                             from './brand.js'
 
 // ── Inject styles ───────────────────────────────────────────────────────────
 const style = document.createElement('style')
 style.textContent = [
-  splashCSS, onboardingCSS, homeCSS, routeCSS, chatCSS, disruptionsCSS,
+  splashCSS, onboardingCSS, homeCSS, routeCSS, chatCSS, disruptionsCSS, mapCSS,
 ].join('\n')
 document.head.appendChild(style)
 
@@ -40,9 +41,8 @@ router.on('/favorites', () => {
 router.on('/more', () => {
   root.innerHTML = `<div style="padding:40px;text-align:center;color:#64748b">Mais — em breve</div>`
 })
-router.on('/nearby', () => {
-  mount(renderDisruptions)
-})
+router.on('/map',    ()      => mount(renderMap))
+router.on('/nearby', ()     => mount(renderDisruptions))
 
 // ── Start ────────────────────────────────────────────────────────────────────
 router.start()
